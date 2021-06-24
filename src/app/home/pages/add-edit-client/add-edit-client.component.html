@@ -1,0 +1,30 @@
+<div class="form-container">
+    <form class="example-form">
+        <mat-form-field class="example-full-width">
+            <mat-label>Client Name</mat-label>
+            <input [ngModel]="clientName" name="clientName" (ngModelChange)="onAddClienName($event)" matInput
+                placeholder="Ex. Pizza" value="Sushi">
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+            <mat-label>Status</mat-label>
+            <mat-select [ngModel]="selectedStatus" name="selectedStatus" (selectionChange)="onSelectedStatus($event)">
+                <mat-option *ngFor="let st of clientStatus" [value]="st.value">
+                    {{st.viewValue}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </form>
+
+    <button [disabled]="!this.clientName || !this.selectedViewValue" (click)="onAddClientDetail()" mat-raised-button
+        color="primary">{{btnText}} client</button>
+    <button class="mt-10" (click)="onSearch()" mat-raised-button>Search</button>
+</div>
+
+<div class="list-container" *ngIf="clientDetails.length>0">
+    <div class="list-block" *ngFor="let info of clientDetails">
+        <app-client (editClientInfo)="onEditClientInfo($event)" (onChangeStatusInfo)="onChangeStatusInfo($event)"
+            [clientStatus]="clientStatus" [info]="info">
+        </app-client>
+    </div>
+</div>

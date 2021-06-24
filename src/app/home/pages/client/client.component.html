@@ -1,0 +1,20 @@
+<div style="text-align: right;">
+    <button mat-mini-fab color="primary" aria-label="Example icon button with a menu icon">
+        <mat-icon>delete</mat-icon>
+    </button>
+    <button (click)="onEdit(info)" mat-mini-fab color="primary" aria-label="Example icon button with a menu icon">
+        <mat-icon>mode</mat-icon>
+    </button>
+</div>
+<div>
+    <div>Client name : {{info.clientName}}</div>
+    <div>Status : {{info.status}}</div>
+</div>
+<div>
+    <ng-container *ngFor="let status of clientStatus">
+        <button
+            [ngClass]="{'success-btn': status.value == 0, 'warn-btn': status.value == 1, 'meeting-btn': status.value == 2}"
+            mat-stroked-button (click)="onChangeStatus(status.viewValue, info)"
+            color="warn">{{status.viewValue}}</button>
+    </ng-container>
+</div>

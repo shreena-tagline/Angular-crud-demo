@@ -1,0 +1,26 @@
+.form-container{
+    display: flex;
+    flex-direction: column;
+    max-width: 600px;
+    margin: 50px auto;
+}
+.list-container{
+    display: flex;
+    flex-direction: column;
+    max-width: 600px;
+    margin: 50px auto;
+    
+}
+.example-form{
+    display: flex;
+    flex-direction: column;
+}
+.list-block{
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+.mt-10{
+    margin-top: 30px;
+}

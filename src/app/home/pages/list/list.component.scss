@@ -1,0 +1,36 @@
+
+.list-container{
+    display: flex;
+    flex-direction: column;
+    max-width: 600px;
+    margin: 50px auto;
+    
+}
+
+.list-block{
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+.mt-10{
+    margin-top: 30px;
+}
+ 
+.success-btn{
+    border: 1px solid green;
+    color: green;
+    margin-right: 10px;
+}
+.warn-btn{
+    border: 1px solid red;
+    color: red;
+    margin-right: 10px;
+}
+.meeting-btn{
+    border: 1px solid #2196f3;
+    color: #2196f3;
+}
+.mr-10{
+    margin-right: 10px;
+}

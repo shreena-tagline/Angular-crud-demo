@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ClientInfo, Status } from 'src/app/core';
 import { ClientInfoService } from 'src/app/core/services/client-info.service';
 
@@ -8,66 +9,71 @@ import { ClientInfoService } from 'src/app/core/services/client-info.service';
   styleUrls: ['./add-edit-client.component.scss']
 })
 export class AddEditClientComponent implements OnInit {
-  clientName: string
+  clientInfoForm!: FormGroup
   selectedStatus: string
   selectedViewValue: string
   clientDetails: ClientInfo[] = []
-  filterRefObj: ClientInfo[] = []
   clientStatus: Status[] = []
   editedObj: ClientInfo
   btnText: string = "Add"
 
-  constructor(private clientInfoService: ClientInfoService) { }
+  constructor(private clientInfoService: ClientInfoService, private formBuilder: FormBuilder) { }
 
   ngOnInit(): void {
-    this.filterRefObj = this.clientInfoService.getClientInfo()
     this.clientDetails = this.clientInfoService.getClientInfo()
     this.clientStatus = this.clientInfoService.getClientStatus()
+
+
+    this.clientInfoService.editClientInfo
+      .subscribe(
+        (editedObj: ClientInfo) => {
+          this.btnText = 'Update'
+          this.editedObj = editedObj
+          const statusValue = this.clientStatus.find(status => status.viewValue === editedObj.status)['value']
+          const editedPatchObj = {
+            clientName: editedObj.clientName,
+            status: statusValue
+          }
+          this.clientInfoForm.patchValue(editedPatchObj)
+          this.selectedViewValue = editedObj.status
+        }
+      );
+
+    this.clientInfoService.onChangeStatusInfo.subscribe(updatedObj => {
+      this.updateClientInfo(updatedObj)
+    })
+
+    this.clientInfoService.deleteClientInfo.subscribe(id => {
+      this.clientDetails.splice(this.clientDetails.findIndex(a => a.id === id), 1)
+    })
+
+    this.clientInfoForm = this.formBuilder.group({
+      clientName: ['', Validators.required],
+      status: ['', Validators.required],
+    });
+
   }
 
-  onAddClienName(e) {
-    this.clientName = e
-  }
-
-  onSelectedStatus(e: any) {
-    this.selectedStatus = e.value
-    this.selectedViewValue = this.clientStatus.find(status => status.value === e.value)['viewValue']
-  }
-
-  onAddClientDetail() {
-    const clientInfoObj: ClientInfo = {
-      clientName: this.clientName,
-      status: this.selectedViewValue,
-      id: this.clientDetails.length + 1
+  onSubmitClientDetail() {
+    const clientInfoObj: ClientInfo = this.clientInfoForm.value
+    const matchStatusObj = this.clientStatus.find(status => status.value === clientInfoObj.status)
+    if (matchStatusObj) {
+      clientInfoObj["status"] = matchStatusObj.viewValue
     }
     if (!this.editedObj) {
+      clientInfoObj['id'] = this.clientDetails.length + 1
       this.clientDetails.push(clientInfoObj)
       this.resetInfo()
     } else {
-      delete clientInfoObj["id"]
       this.updateClientInfo(clientInfoObj, this.editedObj.id)
       this.resetInfo()
     }
   }
 
   resetInfo() {
-    this.clientName = ''
-    this.selectedStatus = ''
-    this.selectedViewValue = ''
+    this.clientInfoForm.controls['clientName'].reset()
   }
 
-  onEditClientInfo(info: ClientInfo) {
-    this.btnText = 'Update'
-    this.editedObj = info
-    this.clientName = info.clientName
-    const statusValue = this.clientStatus.find(status => status.viewValue === info.status)['value']
-    this.selectedStatus = statusValue
-    this.selectedViewValue = info.status
-  }
-
-  onChangeStatusInfo(info: ClientInfo) {
-    this.updateClientInfo(info)
-  }
 
   updateClientInfo(editedObj, id?) {
     if (id) {
@@ -80,35 +86,18 @@ export class AddEditClientComponent implements OnInit {
   }
 
   onSearch() {
-    let filterObj: ClientInfo[]
-
-    if (this.clientName && this.selectedViewValue) {
-      console.log('onSearch======>called');
-      const inputedClientName = this.clientName.toLocaleLowerCase().trim()
-      filterObj = this.filterRefObj.filter(obj => {
-        if (obj.clientName.toLocaleLowerCase().includes(inputedClientName) && obj.status.includes(this.selectedViewValue)) {
-          return obj
-        } else {
-        }
-      })
-    } else if (this.clientName) {
-      const inputedClientName = this.clientName.toLocaleLowerCase().trim()
-      filterObj = this.filterBySearch('clientName', inputedClientName)
-    } else if (this.selectedViewValue) {
-      filterObj = this.filterBySearch('status', this.selectedViewValue)
+    const formValue = this.clientInfoForm.value
+    if (formValue.status) {
+      const searchStatus = this.clientStatus.find(status => status.value === formValue.status)['viewValue']
+      const searchObj = {
+        clientName: formValue.clientName,
+        status: searchStatus
+      }
+      this.clientInfoService.onSearch.emit(searchObj);
     } else {
-      filterObj = this.filterRefObj
+      this.clientInfoService.onSearch.emit(formValue);
     }
-    this.clientDetails = filterObj
-    console.log('filterObj', filterObj)
 
-  }
-
-  filterBySearch(keyName: string, searchValue: string) {
-    return this.filterRefObj.filter(obj => {
-      console.log('obj[keyName]', obj[keyName]);
-      return keyName === 'clientName' ? obj[keyName].toLocaleLowerCase().includes(searchValue) : obj[keyName].includes(searchValue)
-    })
   }
 
 }

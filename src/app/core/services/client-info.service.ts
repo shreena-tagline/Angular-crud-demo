@@ -1,34 +1,42 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Output, EventEmitter } from '@angular/core';
 import { ClientInfo, Status } from '../models';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ClientInfoService {
-  clientDetails:ClientInfo[] = [
-    { clientName: 'jhon',
+  editClientInfo = new EventEmitter<ClientInfo>();
+  deleteClientInfo = new EventEmitter<number>();
+  onChangeStatusInfo = new EventEmitter<ClientInfo>();
+  onSearch = new EventEmitter<any>();
+  clientDetails: ClientInfo[] = [
+    {
+      clientName: 'jhon',
       status: 'I am avilable',
       id: 1
     },
-    { clientName: 'Deo',
+    {
+      clientName: 'Deo',
       status: 'I am not avilable',
       id: 2
     },
   ]
 
-
   status: Status[] = [
-    {value: '0', viewValue: 'I am avilable'},
-    {value: '1', viewValue: 'I am not avilable'},
-    {value: '2', viewValue: 'I am in meeting'}
+    { value: '0', viewValue: 'I am avilable' },
+    { value: '1', viewValue: 'I am not avilable' },
+    { value: '2', viewValue: 'I am in meeting' }
   ];
+
+
+
   constructor() { }
 
-  getClientInfo(){
+  getClientInfo() {
     return this.clientDetails
   }
 
-  getClientStatus(){
+  getClientStatus() {
     return this.status
   }
 }

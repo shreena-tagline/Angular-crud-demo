@@ -9,12 +9,14 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ListComponent } from './pages/list/list.component';
+import { SearchClientInfoPipe } from './pipes/search-client-info.pipe';
 
 
 
 @NgModule({
-  declarations: [ClientComponent, AddEditClientComponent, HomeComponent],
+  declarations: [ClientComponent, AddEditClientComponent, HomeComponent, ListComponent, SearchClientInfoPipe],
   imports: [
     CommonModule,
     HomeRoutingModule,
@@ -23,7 +25,8 @@ import { FormsModule } from '@angular/forms';
     MatSelectModule,
     MatButtonModule,
     MatIconModule,
-    FormsModule
+    FormsModule,
+    ReactiveFormsModule
   ]
 })
 export class HomeModule { }

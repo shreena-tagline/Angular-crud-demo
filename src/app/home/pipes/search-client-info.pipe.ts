@@ -6,7 +6,7 @@ import { ClientInfo } from 'src/app/core';
 })
 export class SearchClientInfoPipe implements PipeTransform {
 
-  transform(clientInfoArray: any, searchValue: any): unknown {
+  transform(clientInfoArray: ClientInfo[], searchValue: any): unknown {
     let filterObj: ClientInfo[]
     if (searchValue.clientName && searchValue.status) {
       const inputtedClientName = searchValue.clientName.toLocaleLowerCase().trim()

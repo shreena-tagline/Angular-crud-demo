@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ClientInfoService } from './services/client-info.service';
+import { AuthenticationService } from './services/authentication.service';
 
 
 
@@ -10,7 +11,8 @@ import { ClientInfoService } from './services/client-info.service';
     CommonModule
   ],
   providers: [
-    ClientInfoService
+    ClientInfoService,
+    AuthenticationService
   ],
 })
 export class CoreModule { }

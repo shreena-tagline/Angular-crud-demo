@@ -12,7 +12,9 @@
         </div>
         <div>
             <div>Client name : {{info.clientName}}</div>
-            <div>Status : {{info.status}}</div>
+            <div
+                [ngClass]="{'success-status': info.status == 'I am available', 'warn-status': info.status == 'I am available but not present', 'meeting-status': info.status == 'I am in meeting'}">
+                Status : {{info.status}}</div>
         </div>
         <div>
             <ng-container *ngFor="let status of clientStatus">
